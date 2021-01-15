@@ -74,7 +74,7 @@ public class SpeedWidget: Widget {
     public override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
         
-        var width: CGFloat = 10
+        var width: CGFloat = 0
         var x: CGFloat = 10
         
         switch self.icon {
@@ -86,28 +86,34 @@ public class SpeedWidget: Widget {
             self.drawChars(dirtyRect)
         default:
             x = 0
-            width = 0
+            width = -10
             break
         }
         
         if self.valueState {
-            let rowWidth: CGFloat = 48
+            let rowWidth: CGFloat = 44
             let rowHeight: CGFloat = self.frame.height / 2
             let style = NSMutableParagraphStyle()
             style.alignment = .right
-            let stringAttributes = [
-                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 9, weight: .light),
-                NSAttributedString.Key.foregroundColor: NSColor.textColor,
+            let stringAttributes_down = [
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 8, weight: .regular),
+                NSAttributedString.Key.foregroundColor: self.downloadValue >= 1_024 * 100 ? NSColor.systemGreen : NSColor.textColor,
+                NSAttributedString.Key.paragraphStyle: style
+            ]
+            
+            let stringAttributes_up = [
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 8, weight: .regular),
+                NSAttributedString.Key.foregroundColor: self.uploadValue >= 1_024 * 100 ? NSColor.systemRed : NSColor.textColor,
                 NSAttributedString.Key.paragraphStyle: style
             ]
             
             let base: DataSizeBase = DataSizeBase(rawValue: self.baseValue) ?? .byte
-            var rect = CGRect(x: Constants.Widget.margin.x + x, y: 1, width: rowWidth - (Constants.Widget.margin.x*2), height: rowHeight)
-            let download = NSAttributedString.init(string: Units(bytes: self.downloadValue).getReadableSpeed(base: base), attributes: stringAttributes)
+            var rect = CGRect(x: Constants.Widget.margin.x - x, y: 1.5, width: rowWidth - (Constants.Widget.margin.x*2), height: rowHeight)
+            let download = NSAttributedString.init(string: Units(bytes: self.downloadValue).getReadableSpeed(base: base), attributes: stringAttributes_down)
             download.draw(with: rect)
             
-            rect = CGRect(x: Constants.Widget.margin.x + x, y: rect.height+1, width: rowWidth - (Constants.Widget.margin.x*2), height: rowHeight)
-            let upload = NSAttributedString.init(string: Units(bytes: self.uploadValue).getReadableSpeed(base: base), attributes: stringAttributes)
+            rect = CGRect(x: Constants.Widget.margin.x - x, y: rect.height+1.5, width: rowWidth - (Constants.Widget.margin.x*2), height: rowHeight)
+            let upload = NSAttributedString.init(string: Units(bytes: self.uploadValue).getReadableSpeed(base: base), attributes: stringAttributes_up)
             upload.draw(with: rect)
             
             width += rowWidth
@@ -125,18 +131,18 @@ public class SpeedWidget: Widget {
         let y: CGFloat = (rowHeight-size)/2
         
         var downloadCircle = NSBezierPath()
-        downloadCircle = NSBezierPath(ovalIn: CGRect(x: Constants.Widget.margin.x, y: y-0.2, width: size, height: size))
+        downloadCircle = NSBezierPath(ovalIn: CGRect(x: dirtyRect.width - size - Constants.Widget.margin.x, y: y-0.2, width: size, height: size))
         if self.downloadValue >= 1_024 {
-            NSColor.systemBlue.set()
+            NSColor.systemGreen.set()
         } else {
             NSColor.textColor.setFill()
         }
         downloadCircle.fill()
         
         var uploadCircle = NSBezierPath()
-        uploadCircle = NSBezierPath(ovalIn: CGRect(x: Constants.Widget.margin.x, y: 10.5, width: size, height: size))
+        uploadCircle = NSBezierPath(ovalIn: CGRect(x: dirtyRect.width - size - Constants.Widget.margin.x, y: 10.5, width: size, height: size))
         if self.uploadValue >= 1_024 {
-            NSColor.red.setFill()
+            NSColor.systemRed.setFill()
         } else {
             NSColor.textColor.setFill()
         }
@@ -147,14 +153,14 @@ public class SpeedWidget: Widget {
         let arrowAngle = CGFloat(Double.pi / 5)
         let half = self.frame.size.height / 2
         let scaleFactor = NSScreen.main?.backingScaleFactor ?? 1
-        let lineWidth: CGFloat = 1
+        let lineWidth: CGFloat = 1.5
         let arrowSize: CGFloat = 3 + (scaleFactor/2)
         let x = Constants.Widget.margin.x + arrowSize + (lineWidth / 2)
         
         let downloadArrow = NSBezierPath()
         downloadArrow.addArrow(
-            start: CGPoint(x: x, y: half - Constants.Widget.spacing/2),
-            end: CGPoint(x: x, y: 0),
+            start: CGPoint(x: dirtyRect.width - x, y: half - Constants.Widget.spacing/2),
+            end: CGPoint(x: dirtyRect.width - x, y: 0),
             pointerLineLength: arrowSize,
             arrowAngle: arrowAngle
         )
@@ -170,8 +176,8 @@ public class SpeedWidget: Widget {
         
         let uploadArrow = NSBezierPath()
         uploadArrow.addArrow(
-            start: CGPoint(x: x, y: half + Constants.Widget.spacing/2),
-            end: CGPoint(x: x, y: self.frame.size.height),
+            start: CGPoint(x: dirtyRect.width - x, y: half + Constants.Widget.spacing/2),
+            end: CGPoint(x: dirtyRect.width - x, y: self.frame.size.height),
             pointerLineLength: arrowSize,
             arrowAngle: arrowAngle
         )
@@ -192,10 +198,10 @@ public class SpeedWidget: Widget {
         if self.symbols.count > 1 {
             let downloadAttributes = [
                 NSAttributedString.Key.font: NSFont.systemFont(ofSize: 9, weight: .regular),
-                NSAttributedString.Key.foregroundColor: downloadValue >= 1_024 ? NSColor(red: (26/255.0), green: (126/255.0), blue: (252/255.0), alpha: 0.8) : NSColor.textColor,
+                NSAttributedString.Key.foregroundColor: downloadValue >= 1_024 ? NSColor.systemGreen : NSColor.textColor,
                 NSAttributedString.Key.paragraphStyle: NSMutableParagraphStyle()
             ]
-            let rect = CGRect(x: Constants.Widget.margin.x, y: 1, width: 8, height: rowHeight)
+            let rect = CGRect(x: dirtyRect.width - 8 - Constants.Widget.margin.x, y: 1, width: 8, height: rowHeight)
             let str = NSAttributedString.init(string: self.symbols[1], attributes: downloadAttributes)
             str.draw(with: rect)
         }
@@ -203,10 +209,10 @@ public class SpeedWidget: Widget {
         if self.symbols.count > 0 {
             let uploadAttributes = [
                 NSAttributedString.Key.font: NSFont.systemFont(ofSize: 9, weight: .regular),
-                NSAttributedString.Key.foregroundColor: uploadValue >= 1_024 ? NSColor.red : NSColor.textColor,
+                NSAttributedString.Key.foregroundColor: uploadValue >= 1_024 ? NSColor.systemRed : NSColor.textColor,
                 NSAttributedString.Key.paragraphStyle: NSMutableParagraphStyle()
             ]
-            let rect = CGRect(x: Constants.Widget.margin.x, y: rowHeight+1, width: 8, height: rowHeight)
+            let rect = CGRect(x: dirtyRect.width - 8 - Constants.Widget.margin.x, y: rowHeight+1, width: 8, height: rowHeight)
             let str = NSAttributedString.init(string: self.symbols[0], attributes: uploadAttributes)
             str.draw(with: rect)
         }

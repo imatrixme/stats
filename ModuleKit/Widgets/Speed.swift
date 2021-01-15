@@ -97,13 +97,13 @@ public class SpeedWidget: Widget {
             style.alignment = .right
             let stringAttributes_down = [
                 NSAttributedString.Key.font: NSFont.systemFont(ofSize: 8, weight: .regular),
-                NSAttributedString.Key.foregroundColor: self.downloadValue >= 1_024 * 100 ? NSColor.systemGreen : NSColor.textColor,
+                NSAttributedString.Key.foregroundColor: NSColor.textColor,
                 NSAttributedString.Key.paragraphStyle: style
             ]
             
             let stringAttributes_up = [
                 NSAttributedString.Key.font: NSFont.systemFont(ofSize: 8, weight: .regular),
-                NSAttributedString.Key.foregroundColor: self.uploadValue >= 1_024 * 100 ? NSColor.systemRed : NSColor.textColor,
+                NSAttributedString.Key.foregroundColor: self.uploadValue >= 1_024 * 300 ? NSColor.systemRed : NSColor.textColor,
                 NSAttributedString.Key.paragraphStyle: style
             ]
             

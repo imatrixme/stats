@@ -91,7 +91,7 @@ public class SpeedWidget: Widget {
         }
         
         if self.valueState {
-            let rowWidth: CGFloat = 44
+            let rowWidth: CGFloat = 48
             let rowHeight: CGFloat = self.frame.height / 2
             let style = NSMutableParagraphStyle()
             style.alignment = .right

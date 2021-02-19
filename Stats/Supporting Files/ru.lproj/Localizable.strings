@@ -41,6 +41,7 @@
 // Settings
 "Open Activity Monitor" = "Открыть Мониторинг системы";
 "Report a bug" = "Сообщить об ошибке";
+"Support the application" = "Поддержите приложение";
 "Close application" = "Закрыть приложение";
 "Open application settings" = "Открыть настройки приложения";
 "Open moduleName settings" = "Откройте настройки %0";
@@ -48,9 +49,18 @@
 // Application settings
 "Update application" = "Обновить приложение";
 "Check for updates" = "Проверять обновления";
+"At start" = "При включении";
+"Once per day" = "Раз в день";
+"Once per week" = "Раз в неделю";
+"Once per month" = "Раз в месяц";
+"Never" = "Никогда";
 "Check for update" = "Проверить обновление";
 "Show icon in dock" = "Показать значок в dock";
 "Start at login" = "Запуск при логуванні";
+
+// Dashboard
+"Serial number" = "Серийный номер";
+"Uptime" = "Время работы";
 
 // Update
 "The latest version of Stats installed" = "Установлена последняя версия";
@@ -72,6 +82,15 @@
 "Display mode" = "Режим отображения";
 "One row" = "Один ряд";
 "Two rows" = "Два ряда";
+"Mini widget" = "Mini";
+"Line chart widget" = "Line chart";
+"Bar chart widget" = "Bar chart";
+"Pie chart widget" = "Pie chart";
+"Network chart widget" = "Network chart";
+"Speed widget" = "Speed";
+"Battery widget" = "Battery";
+"Text widget" = "Text";
+"Memory widget" = "Memory";
 
 // Module Kit
 "Open module settings" = "Открыть настройки модуля";
@@ -98,8 +117,19 @@
 // GPU
 "GPU to show" = "Активный графический процессор";
 "Show GPU type" = "Отображать тип графического процессора";
+"GPU enabled" = "GPU enabled";
+"GPU disabled" = "GPU disabled";
 "GPU temperature" = "Температура графического процессора";
 "GPU utilization" = "Использование графического процессора";
+"Vendor" = "Vendor";
+"Model" = "Model";
+"Status" = "Status";
+"Active" = "Active";
+"Non active" = "Non active";
+"Fan speed" = "Fan speed";
+"Core clock" = "Core clock";
+"Memory clock" = "Memory clock";
+"Utilization" = "Utilization";
 
 // Memory
 "Memory usage" = "Нагрузка на память";
@@ -148,11 +178,14 @@
 // Battery
 "Level" = "Уровень заряда";
 "Source" = "Источник";
+"AC Power" = "AC Power";
+"Battery Power" = "Battery Power";
 "Time" = "Время";
 "Health" = "Состояние аккумулятора";
 "Battery" = "Аккумулятор";
 "Amperage" = "Сила тока";
 "Voltage" = "Напряжение";
+"Cycles" = "Количество циклов";
 "Temperature" = "Температура";
 "Power adapter" = "Блок питания";
 "Power" = "Мощность";

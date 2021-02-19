@@ -115,7 +115,7 @@ public class SystemKit {
             build = buildArr[1].replacingOccurrences(of: "Build ", with: "").replacingOccurrences(of: ")", with: "")
         }
         
-        let version = "\(systemVersion.majorVersion).\(systemVersion.minorVersion)"
+        let version = systemVersion.majorVersion > 10 ? "\(systemVersion.majorVersion)" : "\(systemVersion.majorVersion).\(systemVersion.minorVersion)"
         self.device.os = os_s(name: osDict[version] ?? LocalizedString("Unknown"), version: systemVersion, build: build)
         
         self.device.info.cpu = self.getCPUInfo()
@@ -185,9 +185,9 @@ public class SystemKit {
             name = name.replacingOccurrences(of: "(TM)", with: "")
             name = name.replacingOccurrences(of: "(R)", with: "")
             name = name.replacingOccurrences(of: "CPU", with: "")
-            name = name.replacingOccurrences(of: " @ ", with: "")
+            name = name.replacingOccurrences(of: "@", with: "")
             
-            cpu.name = name
+            cpu.name = name.condenseWhitespace()
         }
         
         var size = UInt32(MemoryLayout<host_basic_info_data_t>.size / MemoryLayout<integer_t>.size)
@@ -375,6 +375,9 @@ public class SystemKit {
         case .imacpro:
             icon = NSImage(named: NSImage.Name("imacPro"))!
             break
+        case .macPro:
+            icon = NSImage(named: NSImage.Name("macPro"))!
+            break
         case .imac:
             icon = NSImage(named: NSImage.Name("imac"))!
             break
@@ -407,6 +410,8 @@ let deviceDict: [String: model_s] = [
     "MacPro7,1": model_s(name: "Mac Pro (2019)", year: 2019, type: .macPro),
     
     // iMac
+    "iMac12,1": model_s(name: "iMac 27-Inch (Mid 2011)", year: 2011, type: .imac),
+    "iMac13,1": model_s(name: "iMac 21.5-Inch (Late 2012)", year: 2012, type: .imac),
     "iMac13,2": model_s(name: "iMac 27-Inch (Late 2012)", year: 2012, type: .imac),
     "iMac14,2": model_s(name: "iMac 27-Inch (Late 2013)", year: 2013, type: .imac),
     "iMac15,1": model_s(name: "iMac 27-Inch (5K, Late 2014)", year: 2014, type: .imac),
@@ -464,6 +469,5 @@ let deviceDict: [String: model_s] = [
 let osDict: [String: String] = [
     "10.14": "Mojave",
     "10.15": "Catalina",
-    "11.0": "Big Sur",
-    "11.1": "Big Sur",
+    "11": "Big Sur",
 ]

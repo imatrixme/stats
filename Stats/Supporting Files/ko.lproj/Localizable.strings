@@ -41,6 +41,7 @@
 // Settings
 "Open Activity Monitor" = "활성 상태 열기";
 "Report a bug" = "버그 리포트";
+"Support the application" = "응용 프로그램 지원";
 "Close application" = "앱 종료";
 "Open application settings" = "앱 설정 열기";
 "Open moduleName settings" = "%0 설정 열기";
@@ -48,9 +49,18 @@
 // Application settings
 "Update application" = "앱 업데이트";
 "Check for updates" = "신규 업데이트 확인";
+"At start" = "At start";
+"Once per day" = "Once per day";
+"Once per week" = "Once per week";
+"Once per month" = "Once per month";
+"Never" = "Never";
 "Check for update" = "신규 업데이트 확인";
 "Show icon in dock" = "Dock에서 아이콘 보이기";
 "Start at login" = "로그인시 시작";
+
+// Dashboard
+"Serial number" = "일련 번호";
+"Uptime" = "가동 시간";
 
 // Update
 "The latest version of Stats installed" = "최신 버전의 Stats가 설치되어 있습니다";
@@ -72,6 +82,15 @@
 "Display mode" = "표기 방식";
 "One row" = "한 줄";
 "Two rows" = "두 줄";
+"Mini widget" = "Mini";
+"Line chart widget" = "Line chart";
+"Bar chart widget" = "Bar chart";
+"Pie chart widget" = "Pie chart";
+"Network chart widget" = "Network chart";
+"Speed widget" = "Speed";
+"Battery widget" = "Battery";
+"Text widget" = "Text";
+"Memory widget" = "Memory";
 
 // Module Kit
 "Open module settings" = "모듈 설정 열기";
@@ -98,8 +117,19 @@
 // GPU
 "GPU to show" = "표시할 GPU";
 "Show GPU type" = "GPU 유형 표시";
+"GPU enabled" = "GPU enabled";
+"GPU disabled" = "GPU disabled";
 "GPU temperature" = "GPU 온도";
 "GPU utilization" = "GPU 활용";
+"Vendor" = "Vendor";
+"Model" = "Model";
+"Status" = "Status";
+"Active" = "Active";
+"Non active" = "Non active";
+"Fan speed" = "Fan speed";
+"Core clock" = "Core clock";
+"Memory clock" = "Memory clock";
+"Utilization" = "Utilization";
 
 // Memory
 "Memory usage" = "메모리 사용량";
@@ -148,11 +178,14 @@
 // Battery
 "Level" = "잔량";
 "Source" = "공급원";
+"AC Power" = "AC Power";
+"Battery Power" = "Battery Power";
 "Time" = "시간";
 "Health" = "상태";
 "Battery" = "배터리";
 "Amperage" = "암페어";
 "Voltage" = "전압";
+"Cycles" = "사이클 수";
 "Temperature" = "온도";
 "Power adapter" = "전원 어댑터";
 "Power" = "출력";

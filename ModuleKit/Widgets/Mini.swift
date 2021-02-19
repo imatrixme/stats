@@ -12,7 +12,7 @@
 import Cocoa
 import StatsKit
 
-public class Mini: Widget {
+public class Mini: WidgetWrapper {
     private let store: UnsafePointer<Store>?
     private let defaultTitle: String
     
@@ -34,7 +34,7 @@ public class Mini: Widget {
         }
     }
     
-    public init(preview: Bool, title: String, config: NSDictionary?, store: UnsafePointer<Store>?) {
+    public init(title: String, config: NSDictionary?, store: UnsafePointer<Store>?, preview: Bool = false) {
         self.store = store
         var widgetTitle: String = title
         if config != nil {
@@ -68,18 +68,16 @@ public class Mini: Widget {
         }
         
         self.defaultTitle = widgetTitle
-        super.init(frame: CGRect(
+        super.init(.mini, title: widgetTitle, frame: CGRect(
             x: 0,
             y: Constants.Widget.margin.y,
             width: Constants.Widget.width + (2*Constants.Widget.margin.x),
             height: Constants.Widget.height - (2*Constants.Widget.margin.y)
         ))
         
-        self.title = widgetTitle
-        self.type = .mini
         self.wantsLayer = true
         
-        if let store = self.store {
+        if let store = self.store, !preview {
             self.colorState = widget_c(rawValue: store.pointee.string(key: "\(self.title)_\(self.type.rawValue)_color", defaultValue: self.colorState.rawValue)) ?? self.colorState
             self.labelState = store.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_label", defaultValue: self.labelState)
         }
@@ -171,12 +169,16 @@ public class Mini: Widget {
     
     // MARK: - Settings
     
-    public override func settings(superview: NSView) {
+    public override func settings(width: CGFloat) -> NSView {
         let height: CGFloat = 60 + (Constants.Settings.margin*3)
         let rowHeight: CGFloat = 30
-        superview.setFrameSize(NSSize(width: superview.frame.width, height: height))
         
-        let view: NSView = NSView(frame: NSRect(x: Constants.Settings.margin, y: Constants.Settings.margin, width: superview.frame.width - (Constants.Settings.margin*2), height: superview.frame.height - (Constants.Settings.margin*2)))
+        let view: NSView = NSView(frame: NSRect(
+            x: Constants.Settings.margin,
+            y: Constants.Settings.margin,
+            width: width - (Constants.Settings.margin*2),
+            height: height
+        ))
         
         view.addSubview(ToggleTitleRow(
             frame: NSRect(x: 0, y: rowHeight + Constants.Settings.margin, width: view.frame.width, height: rowHeight),
@@ -193,7 +195,7 @@ public class Mini: Widget {
             selected: self.colorState.rawValue
         ))
         
-        superview.addSubview(view)
+        return view
     }
     
     @objc private func toggleColor(_ sender: NSMenuItem) {

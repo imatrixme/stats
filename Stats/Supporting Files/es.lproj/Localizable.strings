@@ -2,8 +2,7 @@
 //  Localizable.strings
 //  Stats
 //
-//  Created by Serhiy Mytrovtsiy on 27/08/2020.
-//  Updated by lucasaf04 on 03/12/2020.
+//  Created by lucasaf04 on 03/12/2020.
 //  Using Swift 5.0.
 //  Running on macOS 10.15.
 //
@@ -42,6 +41,7 @@
 // Settings
 "Open Activity Monitor" = "Abrir Monitor de Actividad";
 "Report a bug" = "Reportar un error";
+"Support the application" = "Apoya la aplicación";
 "Close application" = "Cerrar la aplicación";
 "Open application settings" = "Abrir la configuración de la aplicación";
 "Open moduleName settings" = "Abrir la configuración del módulo %0";
@@ -49,9 +49,18 @@
 // Application settings
 "Update application" = "Actualizar la aplicación";
 "Check for updates" = "Buscar actualizaciones";
+"At start" = "At start";
+"Once per day" = "Once per day";
+"Once per week" = "Once per week";
+"Once per month" = "Once per month";
+"Never" = "Never";
 "Check for update" = "Buscar actualización";
 "Show icon in dock" = "Muestra el icono en el dock";
 "Start at login" = "Arrancar al iniciar sesión";
+
+// Dashboard
+"Serial number" = "Número de serie";
+"Uptime" = "Tiempo de actividad";
 
 // Update
 "The latest version of Stats installed" = "La última versión de Stats está instalada";
@@ -73,6 +82,15 @@
 "Display mode" = "Modo de visualización";
 "One row" = "Una fila";
 "Two rows" = "Dos filas";
+"Mini widget" = "Mini";
+"Line chart widget" = "Line chart";
+"Bar chart widget" = "Bar chart";
+"Pie chart widget" = "Pie chart";
+"Network chart widget" = "Network chart";
+"Speed widget" = "Speed";
+"Battery widget" = "Battery";
+"Text widget" = "Text";
+"Memory widget" = "Memory";
 
 // Module Kit
 "Open module settings" = "Abrir la configruación del módulo";
@@ -99,8 +117,19 @@
 // GPU
 "GPU to show" = "GPU a mostrar";
 "Show GPU type" = "Mostrar tipo de GPU";
+"GPU enabled" = "GPU enabled";
+"GPU disabled" = "GPU disabled";
 "GPU temperature" = "Temperatura de la GPU";
 "GPU utilization" = "Utilización de la GPU";
+"Vendor" = "Vendor";
+"Model" = "Model";
+"Status" = "Status";
+"Active" = "Active";
+"Non active" = "Non active";
+"Fan speed" = "Fan speed";
+"Core clock" = "Core clock";
+"Memory clock" = "Memory clock";
+"Utilization" = "Utilization";
 
 // Memory
 "Memory usage" = "Uso de la memoria";
@@ -149,11 +178,14 @@
 // Battery
 "Level" = "Nivel";
 "Source" = "Fuente";
+"AC Power" = "AC Power";
+"Battery Power" = "Battery Power";
 "Time" = "Tiempo";
 "Health" = "Salud";
 "Battery" = "Batería";
 "Amperage" = "Amperaje";
 "Voltage" = "Voltaje";
+"Cycles" = "Número de ciclos";
 "Temperature" = "Temperatura";
 "Power adapter" = "Adaptador de corriente";
 "Power" = "Corriente";

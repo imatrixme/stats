@@ -11,8 +11,8 @@
 
 import Cocoa
 
-public typealias AppUpdateInterval = String
-public enum AppUpdateIntervals: AppUpdateInterval {
+public typealias AppUpdateIntervalType = String
+public enum AppUpdateInterval: AppUpdateIntervalType {
     case atStart = "At start"
     case separator_1 = "separator_1"
     case oncePerDay = "Once per day"
@@ -21,7 +21,15 @@ public enum AppUpdateIntervals: AppUpdateInterval {
     case separator_2 = "separator_2"
     case never = "Never"
 }
-extension AppUpdateIntervals: CaseIterable {}
+public let AppUpdateIntervals: [KeyValue_t] = [
+    KeyValue_t(key: "At start", value: AppUpdateInterval.atStart.rawValue),
+    KeyValue_t(key: "separator_1", value: "separator_1"),
+    KeyValue_t(key: "Once per day", value: AppUpdateInterval.oncePerDay.rawValue),
+    KeyValue_t(key: "Once per week", value: AppUpdateInterval.oncePerWeek.rawValue),
+    KeyValue_t(key: "Once per month", value: AppUpdateInterval.oncePerMonth.rawValue),
+    KeyValue_t(key: "separator_2", value: "separator_2"),
+    KeyValue_t(key: "Never", value: AppUpdateInterval.never.rawValue)
+]
 
 public struct KeyValue_t {
     public let key: String
@@ -88,6 +96,46 @@ public let NetworkReaders: [KeyValue_t] = [
     KeyValue_t(key: "interface", value: "Interface based"),
     KeyValue_t(key: "process", value: "Processes based"),
 ]
+
+public enum widget_c: String {
+    case utilization = "Based on utilization"
+    case pressure = "Based on pressure"
+    
+    case separator_1 = "separator_1"
+    
+    case systemAccent = "System accent"
+    case monochrome = "Monochrome accent"
+    
+    case separator_2 = "separator_2"
+    
+    case clear = "Clear"
+    case white = "White"
+    case black = "Black"
+    case gray = "Gray"
+    case secondGray = "Second gray"
+    case darkGray = "Dark gray"
+    case lightGray = "Light gray"
+    case red = "Red"
+    case secondRed = "Second red"
+    case green = "Green"
+    case secondGreen = "Second green"
+    case blue = "Blue"
+    case secondBlue = "Second blue"
+    case yellow = "Yellow"
+    case secondYellow = "Second yellow"
+    case orange = "Orange"
+    case secondOrange = "Second orange"
+    case purple = "Purple"
+    case secondPurple = "Second purple"
+    case brown = "Brown"
+    case secondBrown = "Second brown"
+    case cyan = "Cyan"
+    case magenta = "Magenta"
+    case pink = "Pink"
+    case teal = "Teal"
+    case indigo = "Indigo"
+}
+extension widget_c: CaseIterable {}
 
 public struct Units {
     public let bytes: Int64
@@ -544,12 +592,13 @@ public func IsNewestVersion(currentVersion: String, latestVersion: String) -> Bo
     return false
 }
 
-public func showNotification(title: String, subtitle: String, id: String = UUID().uuidString, icon: NSImage? = nil) -> NSUserNotification {
+public func showNotification(title: String, subtitle: String? = nil, text: String? = nil, id: String = UUID().uuidString, icon: NSImage? = nil) -> NSUserNotification {
     let notification = NSUserNotification()
     
     notification.identifier = id
     notification.title = title
     notification.subtitle = subtitle
+    notification.informativeText = text
     notification.soundName = NSUserNotificationDefaultSoundName
     notification.hasActionButton = false
     

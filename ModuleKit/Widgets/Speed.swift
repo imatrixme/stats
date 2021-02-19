@@ -12,7 +12,7 @@
 import Cocoa
 import StatsKit
 
-public class SpeedWidget: Widget {
+public class SpeedWidget: WidgetWrapper {
     private var icon: String = "dots"
     private var state: Bool = false
     private var valueState: Bool = true
@@ -29,7 +29,7 @@ public class SpeedWidget: Widget {
     private let store: UnsafePointer<Store>?
     private var width: CGFloat = 58
     
-    public init(preview: Bool, title: String, config: NSDictionary?, store: UnsafePointer<Store>?) {
+    public init(title: String, config: NSDictionary?, store: UnsafePointer<Store>?, preview: Bool = false) {
         let widgetTitle: String = title
         self.store = store
         if config != nil {
@@ -40,18 +40,17 @@ public class SpeedWidget: Widget {
                 self.icon = icon
             }
         }
-        super.init(frame: CGRect(
+        
+        super.init(.speed, title: widgetTitle, frame: CGRect(
             x: 0,
             y: Constants.Widget.margin.y,
             width: width,
             height: Constants.Widget.height - (2*Constants.Widget.margin.y)
         ))
-        self.title = widgetTitle
-        self.type = .speed
-        self.preview = preview
+        
         self.canDrawConcurrently = true
         
-        if self.store != nil {
+        if self.store != nil && !preview {
             self.valueState = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_value", defaultValue: self.valueState)
             self.icon = store!.pointee.string(key: "\(self.title)_\(self.type.rawValue)_icon", defaultValue: self.baseValue)
             self.baseValue = store!.pointee.string(key: "\(self.title)_base", defaultValue: self.baseValue)
@@ -218,16 +217,15 @@ public class SpeedWidget: Widget {
         }
     }
     
-    public override func settings(superview: NSView) {
+    public override func settings(width: CGFloat) -> NSView {
         let height: CGFloat = 90 + (Constants.Settings.margin*4)
         let rowHeight: CGFloat = 30
-        superview.setFrameSize(NSSize(width: superview.frame.width, height: height))
         
         let view: NSView = NSView(frame: NSRect(
             x: Constants.Settings.margin,
             y: Constants.Settings.margin,
-            width: superview.frame.width - (Constants.Settings.margin*2),
-            height: superview.frame.height - (Constants.Settings.margin*2)
+            width: width - (Constants.Settings.margin*2),
+            height: height
         ))
         
         view.addSubview(SelectRow(
@@ -253,7 +251,7 @@ public class SpeedWidget: Widget {
             state: self.valueState
         ))
         
-        superview.addSubview(view)
+        return view
     }
     
     @objc private func toggleValue(_ sender: NSControl) {

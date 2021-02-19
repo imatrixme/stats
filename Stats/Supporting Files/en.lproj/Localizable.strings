@@ -41,6 +41,7 @@
 // Settings
 "Open Activity Monitor" = "Open Activity Monitor";
 "Report a bug" = "Report a bug";
+"Support the application" = "Support the application";
 "Close application" = "Close application";
 "Open application settings" = "Open application settings";
 "Open moduleName settings" = "Open %0 settings";
@@ -48,6 +49,11 @@
 // Application settings
 "Update application" = "Update application";
 "Check for updates" = "Check for updates";
+"At start" = "At start";
+"Once per day" = "Once per day";
+"Once per week" = "Once per week";
+"Once per month" = "Once per month";
+"Never" = "Never";
 "Check for update" = "Check for update";
 "Show icon in dock" = "Show icon in dock";
 "Start at login" = "Start at login";
@@ -76,6 +82,15 @@
 "Display mode" = "View mode";
 "One row" = "One row";
 "Two rows" = "Two rows";
+"Mini widget" = "Mini";
+"Line chart widget" = "Line chart";
+"Bar chart widget" = "Bar chart";
+"Pie chart widget" = "Pie chart";
+"Network chart widget" = "Network chart";
+"Speed widget" = "Speed";
+"Battery widget" = "Battery";
+"Text widget" = "Text";
+"Memory widget" = "Memory";
 
 // Module Kit
 "Open module settings" = "Open module settings";
@@ -102,8 +117,19 @@
 // GPU
 "GPU to show" = "GPU to show";
 "Show GPU type" = "Show GPU type";
+"GPU enabled" = "GPU enabled";
+"GPU disabled" = "GPU disabled";
 "GPU temperature" = "GPU temperature";
 "GPU utilization" = "GPU utilization";
+"Vendor" = "Vendor";
+"Model" = "Model";
+"Status" = "Status";
+"Active" = "Active";
+"Non active" = "Non active";
+"Fan speed" = "Fan speed";
+"Core clock" = "Core clock";
+"Memory clock" = "Memory clock";
+"Utilization" = "Utilization";
 
 // Memory
 "Memory usage" = "Memory usage";
@@ -152,11 +178,14 @@
 // Battery
 "Level" = "Level";
 "Source" = "Source";
+"AC Power" = "AC Power";
+"Battery Power" = "Battery Power";
 "Time" = "Time";
 "Health" = "Health";
 "Battery" = "Battery";
 "Amperage" = "Amperage";
 "Voltage" = "Voltage";
+"Cycles" = "Cycles";
 "Temperature" = "Temperature";
 "Power adapter" = "Power adapter";
 "Power" = "Power";

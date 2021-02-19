@@ -41,6 +41,7 @@
 // Settings
 "Open Activity Monitor" = "Åpne Aktivitetsmonitor";
 "Report a bug" = "Meld en feil";
+"Support the application" = "Støtt programmet";
 "Close application" = "Lukk programmet";
 "Open application settings" = "Åpne programinnstillinger";
 "Open moduleName settings" = "Åpne innstillinger for %0";
@@ -48,9 +49,18 @@
 // Application settings
 "Update application" = "Oppdater programmet";
 "Check for updates" = "Se etter oppdateringer";
+"At start" = "At start";
+"Once per day" = "Once per day";
+"Once per week" = "Once per week";
+"Once per month" = "Once per month";
+"Never" = "Never";
 "Check for update" = "Se etter oppdatering";
 "Show icon in dock" = "Vis ikon i dock";
 "Start at login" = "Start ved innlogging";
+
+// Dashboard
+"Serial number" = "Serienummer";
+"Uptime" = "Oppetid";
 
 // Update
 "The latest version of Stats installed" = "Den nyeste versjonen av Stats er installert";
@@ -72,6 +82,15 @@
 "Display mode" = "Visningsmodus";
 "One row" = "En rad";
 "Two rows" = "To rader";
+"Mini widget" = "Mini";
+"Line chart widget" = "Line chart";
+"Bar chart widget" = "Bar chart";
+"Pie chart widget" = "Pie chart";
+"Network chart widget" = "Network chart";
+"Speed widget" = "Speed";
+"Battery widget" = "Battery";
+"Text widget" = "Text";
+"Memory widget" = "Memory";
 
 // Module Kit
 "Open module settings" = "Åpne modulinnstillinger";
@@ -97,9 +116,20 @@
 
 // GPU
 "GPU to show" = "GPU å vise";
-"Show GPU type" = "Vis GPU-typen";
+"Show GPU type" = "Vis GPU-type";
+"GPU enabled" = "GPU i bruk";
+"GPU disabled" = "GPU ikke i bruk";
 "GPU temperature" = "GPU-temperatur";
 "GPU utilization" = "GPU-bruk";
+"Vendor" = "Produsent";
+"Model" = "Modell";
+"Status" = "Status";
+"Active" = "Aktiv";
+"Non active" = "Inaktiv";
+"Fan speed" = "Viftehastighet";
+"Core clock" = "Kjerneklokke";
+"Memory clock" = "Minneklokke";
+"Utilization" = "Bruk";
 
 // Memory
 "Memory usage" = "Minnebruk";
@@ -148,11 +178,14 @@
 // Battery
 "Level" = "Nivå";
 "Source" = "Kilde";
+"AC Power" = "AC Power";
+"Battery Power" = "Battery Power";
 "Time" = "Tid";
 "Health" = "Helse";
 "Battery" = "Batteri";
 "Amperage" = "Strømstyrke";
 "Voltage" = "Spenning";
+"Cycles" = "Syklusnummer";
 "Temperature" = "Temperatur";
 "Power adapter" = "Strømadapter";
 "Power" = "Strøm";

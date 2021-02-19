@@ -41,6 +41,7 @@
 // Settings
 "Open Activity Monitor" = "Abrir Monitor de Atividades";
 "Report a bug" = "Reportar um erro";
+"Support the application" = "Apoie o aplicativo";
 "Close application" = "Fechar aplicativo";
 "Open application settings" = "Abrir configurações do aplicativo";
 "Open moduleName settings" = "Abrir configurações do %0";
@@ -48,9 +49,18 @@
 // Application settings
 "Update application" = "Atualizar aplicativo";
 "Check for updates" = "Verificar se há atualizações";
+"At start" = "At start";
+"Once per day" = "Once per day";
+"Once per week" = "Once per week";
+"Once per month" = "Once per month";
+"Never" = "Never";
 "Check for update" = "Verificar atualização";
 "Show icon in dock" = "Mostrar ícone no dock";
 "Start at login" = "Inicie no login";
+
+// Dashboard
+"Serial number" = "Número de série";
+"Uptime" = "Tempo de atividade";
 
 // Update
 "The latest version of Stats installed" = "A versão mais recente do Stats instalada";
@@ -72,6 +82,15 @@
 "Display mode" = "Modo de exibição";
 "One row" = "Uma linha";
 "Two rows" = "Duas linhas";
+"Mini widget" = "Mini";
+"Line chart widget" = "Line chart";
+"Bar chart widget" = "Bar chart";
+"Pie chart widget" = "Pie chart";
+"Network chart widget" = "Network chart";
+"Speed widget" = "Speed";
+"Battery widget" = "Battery";
+"Text widget" = "Text";
+"Memory widget" = "Memory";
 
 // Module Kit
 "Open module settings" = "Abrir configurações do módulo";
@@ -98,8 +117,19 @@
 // GPU
 "GPU to show" = "GPU para mostrar";
 "Show GPU type" = "Mostrar tipo de GPU";
+"GPU enabled" = "GPU enabled";
+"GPU disabled" = "GPU disabled";
 "GPU temperature" = "Temperatura da GPU";
 "GPU utilization" = "Utilização da GPU";
+"Vendor" = "Vendor";
+"Model" = "Model";
+"Status" = "Status";
+"Active" = "Active";
+"Non active" = "Non active";
+"Fan speed" = "Fan speed";
+"Core clock" = "Core clock";
+"Memory clock" = "Memory clock";
+"Utilization" = "Utilization";
 
 // Memory
 "Memory usage" = "Memória usada";
@@ -148,11 +178,14 @@
 // Battery
 "Level" = "Nível";
 "Source" = "Fonte";
+"AC Power" = "AC Power";
+"Battery Power" = "Battery Power";
 "Time" = "Tempo";
 "Health" = "Saúde";
 "Battery" = "Bateria";
 "Amperage" = "Amperagem";
 "Voltage" = "Voltagem";
+"Cycles" = "Número de ciclos";
 "Temperature" = "Temperatura";
 "Power adapter" = "Adaptador de energia";
 "Power" = "Energia";

@@ -41,6 +41,7 @@
 // Settings
 "Open Activity Monitor" = "Etkinlik Monitörünü aç";
 "Report a bug" = "Hata bildir";
+"Support the application" = "Uygulamayı destekleyin";
 "Close application" = "Uygulamayı kapat";
 "Open application settings" = "Uygulama ayarlarını aç";
 "Open moduleName settings" = "%0 ayarlarını aç";
@@ -48,9 +49,18 @@
 // Application settings
 "Update application" = "Uygulamayı güncelle";
 "Check for updates" = "Güncellemeleri denetle";
+"At start" = "At start";
+"Once per day" = "Once per day";
+"Once per week" = "Once per week";
+"Once per month" = "Once per month";
+"Never" = "Never";
 "Check for update" = "Güncellemeleri denetle";
 "Show icon in dock" = "Dock'ta göster";
 "Start at login" = "Başlangıçta çalıştır";
+
+// Dashboard
+"Serial number" = "Seri numarası";
+"Uptime" = "Uptime";
 
 // Update
 "The latest version of Stats installed" = "Stats'ın son sürümü yüklendi";
@@ -72,6 +82,15 @@
 "Display mode" = "Ekran modu";
 "One row" = "Bir sıra";
 "Two rows" = "İki sıra";
+"Mini widget" = "Mini";
+"Line chart widget" = "Line chart";
+"Bar chart widget" = "Bar chart";
+"Pie chart widget" = "Pie chart";
+"Network chart widget" = "Network chart";
+"Speed widget" = "Speed";
+"Battery widget" = "Battery";
+"Text widget" = "Text";
+"Memory widget" = "Memory";
 
 // Module Kit
 "Open module settings" = "Modül ayarlarını aç";
@@ -98,8 +117,19 @@
 // GPU
 "GPU to show" = "Gösterilecek GPU";
 "Show GPU type" = "GPU türünü göster";
+"GPU enabled" = "GPU enabled";
+"GPU disabled" = "GPU disabled";
 "GPU temperature" = "GPU sıcaklığı";
 "GPU utilization" = "GPU kullanımı";
+"Vendor" = "Vendor";
+"Model" = "Model";
+"Status" = "Status";
+"Active" = "Active";
+"Non active" = "Non active";
+"Fan speed" = "Fan speed";
+"Core clock" = "Core clock";
+"Memory clock" = "Memory clock";
+"Utilization" = "Utilization";
 
 // Memory
 "Memory usage" = "Ram kullanımı";
@@ -148,11 +178,14 @@
 // Battery
 "Level" = "Doluluk";
 "Source" = "Kaynak";
+"AC Power" = "AC Power";
+"Battery Power" = "Battery Power";
 "Time" = "Süre";
 "Health" = "Sağlık";
 "Battery" = "Batarya";
 "Amperage" = "Amper";
 "Voltage" = "Voltaj";
+"Cycles" = "Döngü sayısı";
 "Temperature" = "Sıcaklık";
 "Power adapter" = "Güç adaptörü";
 "Power" = "Güç";

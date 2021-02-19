@@ -41,6 +41,7 @@
 // Settings
 "Open Activity Monitor" = "Mở trình Giám sát hoạt động";
 "Report a bug" = "Báo cáo lỗi";
+"Support the application" = "Hỗ trợ ứng dụng";
 "Close application" = "Đóng ứng dụng";
 "Open application settings" = "Mở cài đặt ứng dụng";
 "Open moduleName settings" = "Mở cài đặt %0";
@@ -48,9 +49,18 @@
 // Application settings
 "Update application" = "Cập nhật ứng dụng";
 "Check for updates" = "Kiểm tra các cập nhật";
+"At start" = "At start";
+"Once per day" = "Once per day";
+"Once per week" = "Once per week";
+"Once per month" = "Once per month";
+"Never" = "Never";
 "Check for update" = "Kiểm tra cập nhật";
 "Show icon in dock" = "Hiện icon trên Dock";
 "Start at login" = "Khởi động lúc đăng nhập";
+
+// Dashboard
+"Serial number" = "Số sê-ri";
+"Uptime" = "Thời gian hoạt động";
 
 // Update
 "The latest version of Stats installed" = "Stats đã được cập nhật";
@@ -72,6 +82,15 @@
 "Display mode" = "Chế độ xem";
 "One row" = "Một hàng";
 "Two rows" = "Hai hàng";
+"Mini widget" = "Mini";
+"Line chart widget" = "Line chart";
+"Bar chart widget" = "Bar chart";
+"Pie chart widget" = "Pie chart";
+"Network chart widget" = "Network chart";
+"Speed widget" = "Speed";
+"Battery widget" = "Battery";
+"Text widget" = "Text";
+"Memory widget" = "Memory";
 
 // Module Kit
 "Open module settings" = "Mở cài đặt module";
@@ -98,8 +117,19 @@
 // GPU
 "GPU to show" = "GPU để hiển thị";
 "Show GPU type" = "Hiển thị loại GPU";
+"GPU enabled" = "GPU enabled";
+"GPU disabled" = "GPU disabled";
 "GPU temperature" = "Nhiệt độ GPU";
 "GPU utilization" = "Sử dụng GPU";
+"Vendor" = "Vendor";
+"Model" = "Model";
+"Status" = "Status";
+"Active" = "Active";
+"Non active" = "Non active";
+"Fan speed" = "Fan speed";
+"Core clock" = "Core clock";
+"Memory clock" = "Memory clock";
+"Utilization" = "Utilization";
 
 // Memory
 "Memory usage" = "Sử dụng Bộ nhớ";
@@ -148,11 +178,14 @@
 // Battery
 "Level" = "Dung lượng Pin";
 "Source" = "Nguồn";
+"AC Power" = "AC Power";
+"Battery Power" = "Battery Power";
 "Time" = "Thời gian";
 "Health" = "Sức khoẻ";
 "Battery" = "PIN";
 "Amperage" = "Cường độ dòng điện";
 "Voltage" = "Điện áp";
+"Cycles" = "Số chu kỳ";
 "Temperature" = "Nhiệt độ";
 "Power adapter" = "Bộ sạc";
 "Power" = "Công suất";

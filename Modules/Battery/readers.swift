@@ -91,7 +91,7 @@ internal class UsageReader: Reader<Battery_Usage> {
                 
                 var ACwatts: Int = 0
                 if let ACDetails = IOPSCopyExternalPowerAdapterDetails() {
-                    if let ACList = ACDetails.takeUnretainedValue() as? Dictionary<String, Any> {
+                    if let ACList = ACDetails.takeRetainedValue() as? Dictionary<String, Any> {
                         guard let watts = ACList[kIOPSPowerAdapterWattsKey] else {
                             return
                         }
@@ -142,8 +142,7 @@ internal class UsageReader: Reader<Battery_Usage> {
 }
 
 public class ProcessReader: Reader<[TopProcess]> {
-    private let store: UnsafePointer<Store>
-    private let title: String
+    private let title: String = "Battery"
     
     private var task: Process = Process()
     private var initialized: Bool = false
@@ -151,20 +150,15 @@ public class ProcessReader: Reader<[TopProcess]> {
     
     private var numberOfProcesses: Int {
         get {
-            return self.store.pointee.int(key: "\(self.title)_processes", defaultValue: 8)
+            return Store.shared.int(key: "\(self.title)_processes", defaultValue: 8)
         }
-    }
-    
-    init(_ title: String, store: UnsafePointer<Store>) {
-        self.title = title
-        self.store = store
-        super.init()
     }
     
     public override func setup() {
         self.popup = true
         
         let pipe = Pipe()
+        
         self.task.standardOutput = pipe
         self.task.launchPath = "/usr/bin/top"
         self.task.arguments = ["-o", "power", "-n", "\(self.numberOfProcesses)", "-stats", "pid,command,power"]

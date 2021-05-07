@@ -13,9 +13,8 @@ import Cocoa
 import StatsKit
 
 public class PieChart: WidgetWrapper {
-    private var labelState: Bool = true
+    private var labelState: Bool = false
     
-    private let store: UnsafePointer<Store>?
     private var chart: PieChartView = PieChartView(
         frame: NSRect(
             x: Constants.Widget.margin.x,
@@ -29,9 +28,8 @@ public class PieChart: WidgetWrapper {
     
     private let size: CGFloat = Constants.Widget.height - (Constants.Widget.margin.y*2) + (Constants.Widget.margin.x*2)
     
-    public init(title: String, config: NSDictionary?, store: UnsafePointer<Store>?, preview: Bool = false) {
+    public init(title: String, config: NSDictionary?, preview: Bool = false) {
         var widgetTitle: String = title
-        self.store = store
         if config != nil {
             if let titleFromConfig = config!["Title"] as? String {
                 widgetTitle = titleFromConfig
@@ -45,12 +43,7 @@ public class PieChart: WidgetWrapper {
             height: Constants.Widget.height - (Constants.Widget.margin.y*2)
         ))
         
-        self.wantsLayer = true
         self.canDrawConcurrently = true
-        
-        if let store = self.store, !preview {
-            self.labelState = store.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_label", defaultValue: self.labelState)
-        }
         
         if preview {
             if self.title == "CPU" {
@@ -65,6 +58,8 @@ public class PieChart: WidgetWrapper {
                     circle_segment(value: 0.08, color: NSColor.systemPink)
                 ])
             }
+        } else {
+            self.labelState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_label", defaultValue: self.labelState)
         }
         
         self.draw()
@@ -87,6 +82,7 @@ public class PieChart: WidgetWrapper {
         frame = NSRect(x: x, y: 0, width: self.frame.size.height, height: self.frame.size.height)
         self.chart.frame = frame
         
+        self.setFrameSize(NSSize(width: self.size + x, height: self.frame.size.height))
         self.setWidth(self.size + x)
     }
     
@@ -128,7 +124,7 @@ public class PieChart: WidgetWrapper {
         }
         
         self.labelState = state! == .on ? true : false
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_label", value: self.labelState)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_label", value: self.labelState)
         
         let x = self.labelState ? 6 + Constants.Widget.spacing : 0
         self.labelView!.isHidden = !self.labelState

@@ -13,32 +13,30 @@ import Cocoa
 import StatsKit
 
 public class LineChart: WidgetWrapper {
-    private var labelState: Bool = true
+    private var labelState: Bool = false
     private var boxState: Bool = true
     private var frameState: Bool = false
     private var valueState: Bool = false
     private var valueColorState: Bool = false
-    private var colorState: widget_c = .systemAccent
+    private var colorState: Color = .systemAccent
     
     private let width: CGFloat = 34
     
-    private let store: UnsafePointer<Store>?
     private var chart: LineChartView = LineChartView(frame: NSRect(
         x: 0,
         y: 0,
         width: 34,
         height: Constants.Widget.height - (2*Constants.Widget.margin.y)
     ), num: 60)
-    private var colors: [widget_c] = widget_c.allCases
+    private var colors: [Color] = Color.allCases
     private var value: Double = 0
     private var pressureLevel: Int = 0
     
     private var boxSettingsView: NSView? = nil
     private var frameSettingsView: NSView? = nil
     
-    public init(title: String, config: NSDictionary?, store: UnsafePointer<Store>?, preview: Bool = false) {
+    public init(title: String, config: NSDictionary?, preview: Bool = false) {
         var widgetTitle: String = title
-        self.store = store
         if config != nil {
             if let titleFromConfig = config!["Title"] as? String {
                 widgetTitle = titleFromConfig
@@ -52,10 +50,8 @@ public class LineChart: WidgetWrapper {
             if let value = config!["Value"] as? Bool {
                 self.valueState = value
             }
-            if let colorsToDisable = config!["Unsupported colors"] as? [String] {
-                self.colors = self.colors.filter { (color: widget_c) -> Bool in
-                    return !colorsToDisable.contains("\(color.self)")
-                }
+            if let unsupportedColors = config!["Unsupported colors"] as? [String] {
+                self.colors = self.colors.filter{ !unsupportedColors.contains($0.key) }
             }
             if let color = config!["Color"] as? String {
                 if let defaultColor = colors.first(where: { "\($0.self)" == color }) {
@@ -73,13 +69,13 @@ public class LineChart: WidgetWrapper {
         
         self.canDrawConcurrently = true
         
-        if self.store != nil && !preview {
-            self.boxState = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_box", defaultValue: self.boxState)
-            self.frameState = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_frame", defaultValue: self.frameState)
-            self.valueState = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_value", defaultValue: self.valueState)
-            self.labelState = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_label", defaultValue: self.labelState)
-            self.valueColorState = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_valueColor", defaultValue: self.valueColorState)
-            self.colorState = widget_c(rawValue: store!.pointee.string(key: "\(self.title)_\(self.type.rawValue)_color", defaultValue: self.colorState.rawValue)) ?? self.colorState
+        if !preview {
+            self.boxState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_box", defaultValue: self.boxState)
+            self.frameState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_frame", defaultValue: self.frameState)
+            self.valueState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_value", defaultValue: self.valueState)
+            self.labelState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_label", defaultValue: self.labelState)
+            self.valueColorState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_valueColor", defaultValue: self.valueColorState)
+            self.colorState = Color.fromString(Store.shared.string(key: "\(self.title)_\(self.type.rawValue)_color", defaultValue: self.colorState.key))
         }
         
         if self.labelState {
@@ -122,7 +118,7 @@ public class LineChart: WidgetWrapper {
             } else {
                 color = (isDarkMode ? NSColor.white : NSColor.black)
             }
-        default: color = colorFromString("\(self.colorState.self)")
+        default: color = self.colorState.additional as? NSColor ?? NSColor.controlAccentColor
         }
         
         if self.labelState {
@@ -289,12 +285,12 @@ public class LineChart: WidgetWrapper {
         )
         view.addSubview(self.frameSettingsView!)
         
-        view.addSubview(SelectColorRow(
+        view.addSubview(SelectRow(
             frame: NSRect(x: 0, y: (rowHeight + Constants.Settings.margin) * 1, width: view.frame.width, height: rowHeight),
             title: LocalizedString("Color"),
             action: #selector(toggleColor),
-            items: self.colors.map{ $0.rawValue },
-            selected: self.colorState.rawValue
+            items: self.colors,
+            selected: self.colorState.key
         ))
         
         view.addSubview(ToggleTitleRow(
@@ -315,7 +311,7 @@ public class LineChart: WidgetWrapper {
             state = sender is NSButton ? (sender as! NSButton).state: nil
         }
         self.labelState = state! == .on ? true : false
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_label", value: self.labelState)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_label", value: self.labelState)
         self.display()
     }
     
@@ -327,12 +323,12 @@ public class LineChart: WidgetWrapper {
             state = sender is NSButton ? (sender as! NSButton).state: nil
         }
         self.boxState = state! == .on ? true : false
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_box", value: self.boxState)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_box", value: self.boxState)
         
         if self.frameState {
             FindAndToggleNSControlState(self.frameSettingsView, state: .off)
             self.frameState = false
-            self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_frame", value: self.frameState)
+            Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_frame", value: self.frameState)
         }
         
         self.display()
@@ -346,12 +342,12 @@ public class LineChart: WidgetWrapper {
             state = sender is NSButton ? (sender as! NSButton).state: nil
         }
         self.frameState = state! == .on ? true : false
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_frame", value: self.frameState)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_frame", value: self.frameState)
         
         if self.boxState {
             FindAndToggleNSControlState(self.boxSettingsView, state: .off)
             self.boxState = false
-            self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_box", value: self.boxState)
+            Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_box", value: self.boxState)
         }
         
         self.display()
@@ -365,16 +361,20 @@ public class LineChart: WidgetWrapper {
             state = sender is NSButton ? (sender as! NSButton).state: nil
         }
         self.valueState = state! == .on ? true : false
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_value", value: self.valueState)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_value", value: self.valueState)
         self.display()
     }
     
     @objc private func toggleColor(_ sender: NSMenuItem) {
-        if let newColor = widget_c.allCases.first(where: { $0.rawValue == sender.title }) {
-            self.colorState = newColor
-            self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_color", value: self.colorState.rawValue)
-            self.display()
+        guard let key = sender.representedObject as? String else {
+            return
         }
+        if let newColor = Color.allCases.first(where: { $0.key == key }) {
+            self.colorState = newColor
+        }
+        
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_color", value: key)
+        self.display()
     }
     
     @objc private func toggleValueColor(_ sender: NSControl) {
@@ -385,7 +385,7 @@ public class LineChart: WidgetWrapper {
             state = sender is NSButton ? (sender as! NSButton).state: nil
         }
         self.valueColorState = state! == .on ? true : false
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_valueColor", value: self.valueColorState)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_valueColor", value: self.valueColorState)
         self.display()
     }
 }

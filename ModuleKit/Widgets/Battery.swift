@@ -19,16 +19,13 @@ public class BatterykWidget: WidgetWrapper {
     private var colorState: Bool = false
     private var hideAdditionalWhenFull: Bool = true
     
-    private let store: UnsafePointer<Store>?
-    
     private var percentage: Double = 1
     private var time: Int = 0
     private var charging: Bool = false
     private var ACStatus: Bool = false
     
-    public init(title: String, config: NSDictionary?, store: UnsafePointer<Store>?, preview: Bool = false) {
+    public init(title: String, config: NSDictionary?, preview: Bool = false) {
         let widgetTitle: String = title
-        self.store = store
         
         super.init(.battery, title: widgetTitle, frame: CGRect(
             x: Constants.Widget.margin.x,
@@ -39,12 +36,12 @@ public class BatterykWidget: WidgetWrapper {
         
         self.canDrawConcurrently = true
         
-        if self.store != nil && !preview {
-            self.additional = store!.pointee.string(key: "\(self.title)_\(self.type.rawValue)_additional", defaultValue: self.additional)
-            self.timeFormat = store!.pointee.string(key: "\(self.title)_timeFormat", defaultValue: self.timeFormat)
-            self.iconState = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_icon", defaultValue: self.iconState)
-            self.colorState = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_color", defaultValue: self.colorState)
-            self.hideAdditionalWhenFull = store!.pointee.bool(key: "\(self.title)_\(self.type.rawValue)_hideAdditionalWhenFull", defaultValue: self.hideAdditionalWhenFull)
+        if !preview {
+            self.additional = Store.shared.string(key: "\(self.title)_\(self.type.rawValue)_additional", defaultValue: self.additional)
+            self.timeFormat = Store.shared.string(key: "\(self.title)_timeFormat", defaultValue: self.timeFormat)
+            self.iconState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_icon", defaultValue: self.iconState)
+            self.colorState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_color", defaultValue: self.colorState)
+            self.hideAdditionalWhenFull = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_hideAdditionalWhenFull", defaultValue: self.hideAdditionalWhenFull)
         }
         
         if preview {
@@ -137,7 +134,7 @@ public class BatterykWidget: WidgetWrapper {
         width += 2 // add battery point width
         
         let maxWidth = batterySize.width - offset*2 - borderWidth*2 - 1
-        let innerWidth: CGFloat = self.ACStatus && !self.charging ? maxWidth : max(1, maxWidth * CGFloat(self.percentage))
+        let innerWidth: CGFloat = max(1, maxWidth * CGFloat(self.percentage))
         let innerOffset: CGFloat = -offset + borderWidth + 1
         let inner = NSBezierPath(roundedRect: NSRect(
             x: batteryFrame.bounds.origin.x + innerOffset,
@@ -153,21 +150,60 @@ public class BatterykWidget: WidgetWrapper {
                 x: batteryFrame.bounds.origin.x + (batteryFrame.bounds.width/2),
                 y: batteryFrame.bounds.origin.y + (batteryFrame.bounds.height/2)
             )
-            let boltSize: CGSize = CGSize(width: 9, height: batterySize.height + 6)
+            var points: [CGPoint] = []
             
-            let minX = batteryCenter.x - (boltSize.width/2)
-            let maxX = batteryCenter.x + (boltSize.width/2)
-            let minY = batteryCenter.y - (boltSize.height/2)
-            let maxY = batteryCenter.y + (boltSize.height/2)
-            
-            let points: [CGPoint] = [
-                CGPoint(x: batteryCenter.x-3, y: minY), // bottom
-                CGPoint(x: maxX, y: batteryCenter.y+1.5),
-                CGPoint(x: batteryCenter.x+1, y: batteryCenter.y+1.5),
-                CGPoint(x: batteryCenter.x+3, y: maxY), // top
-                CGPoint(x: minX, y: batteryCenter.y-1.5),
-                CGPoint(x: batteryCenter.x-1, y: batteryCenter.y-1.5),
-            ]
+            if self.charging {
+                let iconSize: CGSize = CGSize(width: 9, height: batterySize.height + 6)
+                let min = CGPoint(
+                    x: batteryCenter.x - (iconSize.width/2),
+                    y: batteryCenter.y - (iconSize.height/2)
+                )
+                let max = CGPoint(
+                    x: batteryCenter.x + (iconSize.width/2),
+                    y: batteryCenter.y + (iconSize.height/2)
+                )
+                
+                points = [
+                    CGPoint(x: batteryCenter.x-3, y: min.y), // bottom
+                    CGPoint(x: max.x, y: batteryCenter.y+1.5),
+                    CGPoint(x: batteryCenter.x+1, y: batteryCenter.y+1.5),
+                    CGPoint(x: batteryCenter.x+3, y: max.y), // top
+                    CGPoint(x: min.x, y: batteryCenter.y-1.5),
+                    CGPoint(x: batteryCenter.x-1, y: batteryCenter.y-1.5),
+                ]
+            } else {
+                let iconSize: CGSize = CGSize(width: 9, height: batterySize.height + 2)
+                let minY = batteryCenter.y - (iconSize.height/2)
+                let maxY = batteryCenter.y + (iconSize.height/2)
+                
+                points = [
+                    CGPoint(x: batteryCenter.x-1.5, y: minY+0.5),
+                    
+                    CGPoint(x: batteryCenter.x+1.5, y: minY+0.5),
+                    CGPoint(x: batteryCenter.x+1.5, y: batteryCenter.y - 2.5),
+                    
+                    CGPoint(x: batteryCenter.x+4, y: batteryCenter.y + 0.5),
+                    CGPoint(x: batteryCenter.x+4, y: batteryCenter.y + 4.25),
+                    
+                    // right
+                    CGPoint(x: batteryCenter.x+2.75, y: batteryCenter.y + 4.25),
+                    CGPoint(x: batteryCenter.x+2.75, y: maxY-0.25),
+                    CGPoint(x: batteryCenter.x+0.25, y: maxY-0.25),
+                    CGPoint(x: batteryCenter.x+0.25, y: batteryCenter.y + 4.25),
+                    
+                    // left
+                    CGPoint(x: batteryCenter.x-0.25, y: batteryCenter.y + 4.25),
+                    CGPoint(x: batteryCenter.x-0.25, y: maxY-0.25),
+                    CGPoint(x: batteryCenter.x-2.75, y: maxY-0.25),
+                    CGPoint(x: batteryCenter.x-2.75, y: batteryCenter.y + 4.25),
+                    
+                    CGPoint(x: batteryCenter.x-4, y: batteryCenter.y + 4.25),
+                    CGPoint(x: batteryCenter.x-4, y: batteryCenter.y + 0.5),
+                    
+                    CGPoint(x: batteryCenter.x-1.5, y: batteryCenter.y - 2.5),
+                    CGPoint(x: batteryCenter.x-1.5, y: minY+0.5),
+                ]
+            }
             
             let linePath = NSBezierPath()
             linePath.move(to: CGPoint(x: points[0].x, y: points[0].y))
@@ -233,7 +269,7 @@ public class BatterykWidget: WidgetWrapper {
     
     public func setValue(percentage: Double, ACStatus: Bool, isCharging: Bool, time: Int) {
         var updated: Bool = false
-        let timeFormat: String = store!.pointee.string(key: "\(self.title)_timeFormat", defaultValue: self.timeFormat)
+        let timeFormat: String = Store.shared.string(key: "\(self.title)_timeFormat", defaultValue: self.timeFormat)
         
         if self.percentage != percentage {
             self.percentage = percentage
@@ -306,7 +342,7 @@ public class BatterykWidget: WidgetWrapper {
             return
         }
         self.additional = key
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_additional", value: key)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_additional", value: key)
         self.display()
     }
     
@@ -318,7 +354,7 @@ public class BatterykWidget: WidgetWrapper {
             state = sender is NSButton ? (sender as! NSButton).state: nil
         }
         self.hideAdditionalWhenFull = state! == .on ? true : false
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_hideAdditionalWhenFull", value: self.hideAdditionalWhenFull)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_hideAdditionalWhenFull", value: self.hideAdditionalWhenFull)
         self.display()
     }
     
@@ -330,7 +366,7 @@ public class BatterykWidget: WidgetWrapper {
             state = sender is NSButton ? (sender as! NSButton).state: nil
         }
         self.colorState = state! == .on ? true : false
-        self.store?.pointee.set(key: "\(self.title)_\(self.type.rawValue)_color", value: self.colorState)
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_color", value: self.colorState)
         self.display()
     }
 }

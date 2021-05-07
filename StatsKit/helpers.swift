@@ -10,28 +10,15 @@
 //
 
 import Cocoa
+import os.log
 
-public typealias AppUpdateIntervalType = String
-public enum AppUpdateInterval: AppUpdateIntervalType {
-    case atStart = "At start"
-    case separator_1 = "separator_1"
-    case oncePerDay = "Once per day"
-    case oncePerWeek = "Once per week"
-    case oncePerMonth = "Once per month"
-    case separator_2 = "separator_2"
-    case never = "Never"
+public protocol KeyValue_p {
+    var key: String { get }
+    var value: String { get }
+    var additional: Any? { get }
 }
-public let AppUpdateIntervals: [KeyValue_t] = [
-    KeyValue_t(key: "At start", value: AppUpdateInterval.atStart.rawValue),
-    KeyValue_t(key: "separator_1", value: "separator_1"),
-    KeyValue_t(key: "Once per day", value: AppUpdateInterval.oncePerDay.rawValue),
-    KeyValue_t(key: "Once per week", value: AppUpdateInterval.oncePerWeek.rawValue),
-    KeyValue_t(key: "Once per month", value: AppUpdateInterval.oncePerMonth.rawValue),
-    KeyValue_t(key: "separator_2", value: "separator_2"),
-    KeyValue_t(key: "Never", value: AppUpdateInterval.never.rawValue)
-]
 
-public struct KeyValue_t {
+public struct KeyValue_t: KeyValue_p {
     public let key: String
     public let value: String
     public let additional: Any?
@@ -42,100 +29,6 @@ public struct KeyValue_t {
         self.additional = additional
     }
 }
-
-public let TemperatureUnits: [KeyValue_t] = [
-    KeyValue_t(key: "system", value: "System"),
-    KeyValue_t(key: "separator", value: "separator"),
-    KeyValue_t(key: "celsius", value: "Celsius", additional: UnitTemperature.celsius),
-    KeyValue_t(key: "fahrenheit", value: "Fahrenheit", additional: UnitTemperature.fahrenheit)
-]
-
-public enum DataSizeBase: String {
-    case bit = "bit"
-    case byte = "byte"
-}
-public let SpeedBase: [KeyValue_t] = [
-    KeyValue_t(key: "bit", value: "Bit", additional: DataSizeBase.bit),
-    KeyValue_t(key: "byte", value: "Byte", additional: DataSizeBase.byte)
-]
-
-public let SensorsWidgetMode: [KeyValue_t] = [
-    KeyValue_t(key: "automatic", value: "Automatic"),
-    KeyValue_t(key: "separator", value: "separator"),
-    KeyValue_t(key: "oneRow", value: "One row"),
-    KeyValue_t(key: "twoRows", value: "Two rows"),
-]
-
-public let SpeedPictogram: [KeyValue_t] = [
-    KeyValue_t(key: "none", value: "None"),
-    KeyValue_t(key: "separator", value: "separator"),
-    KeyValue_t(key: "dots", value: "Dots"),
-    KeyValue_t(key: "arrows", value: "Arrows"),
-    KeyValue_t(key: "chars", value: "Characters"),
-]
-
-public let BatteryAdditionals: [KeyValue_t] = [
-    KeyValue_t(key: "none", value: "None"),
-    KeyValue_t(key: "separator", value: "separator"),
-    KeyValue_t(key: "percentage", value: "Percentage"),
-    KeyValue_t(key: "time", value: "Time"),
-    KeyValue_t(key: "percentageAndTime", value: "Percentage and time"),
-    KeyValue_t(key: "timeAndPercentage", value: "Time and percentage"),
-]
-
-public let ShortLong: [KeyValue_t] = [
-    KeyValue_t(key: "short", value: "Short"),
-    KeyValue_t(key: "long", value: "Long"),
-]
-
-public let ReaderUpdateIntervals: [Int] = [1, 2, 3, 5, 10, 15, 30]
-public let NumbersOfProcesses: [Int] = [0, 3, 5, 8, 10, 15]
-
-public typealias Bandwidth = (upload: Int64, download: Int64)
-public let NetworkReaders: [KeyValue_t] = [
-    KeyValue_t(key: "interface", value: "Interface based"),
-    KeyValue_t(key: "process", value: "Processes based"),
-]
-
-public enum widget_c: String {
-    case utilization = "Based on utilization"
-    case pressure = "Based on pressure"
-    
-    case separator_1 = "separator_1"
-    
-    case systemAccent = "System accent"
-    case monochrome = "Monochrome accent"
-    
-    case separator_2 = "separator_2"
-    
-    case clear = "Clear"
-    case white = "White"
-    case black = "Black"
-    case gray = "Gray"
-    case secondGray = "Second gray"
-    case darkGray = "Dark gray"
-    case lightGray = "Light gray"
-    case red = "Red"
-    case secondRed = "Second red"
-    case green = "Green"
-    case secondGreen = "Second green"
-    case blue = "Blue"
-    case secondBlue = "Second blue"
-    case yellow = "Yellow"
-    case secondYellow = "Second yellow"
-    case orange = "Orange"
-    case secondOrange = "Second orange"
-    case purple = "Purple"
-    case secondPurple = "Second purple"
-    case brown = "Brown"
-    case secondBrown = "Second brown"
-    case cyan = "Cyan"
-    case magenta = "Magenta"
-    case pink = "Pink"
-    case teal = "Teal"
-    case indigo = "Indigo"
-}
-extension widget_c: CaseIterable {}
 
 public struct Units {
     public let bytes: Int64
@@ -314,6 +207,7 @@ public extension NSBezierPath {
 
 public func SeparatorView(_ title: String, origin: NSPoint, width: CGFloat) -> NSView {
     let view: NSView = NSView(frame: NSRect(x: origin.x, y: origin.y, width: width, height: 30))
+    view.heightAnchor.constraint(equalToConstant: view.bounds.height).isActive = true
     
     let labelView: NSTextField = TextView(frame: NSRect(x: 0, y: (view.frame.height-15)/2, width: view.frame.width, height: 15))
     labelView.stringValue = title
@@ -326,16 +220,22 @@ public func SeparatorView(_ title: String, origin: NSPoint, width: CGFloat) -> N
     return view
 }
 
-public func PopupRow(_ view: NSView, n: CGFloat, title: String, value: String) -> (LabelField, ValueField) {
+public func PopupRow(_ view: NSView, n: CGFloat = 0, title: String, value: String) -> (LabelField, ValueField) {
     let rowView: NSView = NSView(frame: NSRect(x: 0, y: 22*n, width: view.frame.width, height: 22))
     
-    let labelWidth = title.widthOfString(usingFont: .systemFont(ofSize: 13, weight: .regular)) + 5
+    let labelWidth = title.widthOfString(usingFont: .systemFont(ofSize: 13, weight: .regular)) + 4
     let labelView: LabelField = LabelField(frame: NSRect(x: 0, y: (22-15)/2, width: labelWidth, height: 15), title)
     let valueView: ValueField = ValueField(frame: NSRect(x: labelWidth, y: (22-15)/2, width: rowView.frame.width - labelWidth, height: 16), value)
     
     rowView.addSubview(labelView)
     rowView.addSubview(valueView)
-    view.addSubview(rowView)
+    
+    if let view = view as? NSStackView {
+        rowView.heightAnchor.constraint(equalToConstant: rowView.bounds.height).isActive = true
+        view.addArrangedSubview(rowView)
+    } else {
+        view.addSubview(rowView)
+    }
     
     return (labelView, valueView)
 }
@@ -445,69 +345,6 @@ public func syncShell(_ args: String) -> String {
     let output = String(data: data, encoding: .utf8)!
     
     return output
-}
-
-public func colorFromString(_ colorString: String) -> NSColor {
-    switch colorString {
-    case "black":
-        return NSColor.black
-    case "darkGray":
-        return NSColor.darkGray
-    case "lightGray":
-        return NSColor.lightGray
-    case "gray":
-        return NSColor.gray
-    case "secondGray":
-        return NSColor.systemGray
-    case "white":
-        return NSColor.white
-    case "red":
-        return NSColor.red
-    case "secondRed":
-        return NSColor.systemRed
-    case "green":
-        return NSColor.green
-    case "secondGreen":
-        return NSColor.systemGreen
-    case "blue":
-        return NSColor.blue
-    case "secondBlue":
-        return NSColor.systemBlue
-    case "yellow":
-        return NSColor.yellow
-    case "secondYellow":
-        return NSColor.systemYellow
-    case "orange":
-        return NSColor.orange
-    case "secondOrange":
-        return NSColor.systemOrange
-    case "purple":
-        return NSColor.purple
-    case "secondPurple":
-        return NSColor.systemPurple
-    case "brown":
-        return NSColor.brown
-    case "secondBrown":
-        return NSColor.systemBrown
-    case "cyan":
-        return NSColor.cyan
-    case "magenta":
-        return NSColor.magenta
-    case "clear":
-        return NSColor.clear
-    case "pink":
-        return NSColor.systemPink
-    case "teal":
-        return NSColor.systemTeal
-    case "indigo":
-        if #available(OSX 10.15, *) {
-            return NSColor.systemIndigo
-        } else {
-            return NSColor(hexString: "#4B0082")
-        }
-    default:
-        return NSColor.controlAccentColor
-    }
 }
 
 public func IsNewestVersion(currentVersion: String, latestVersion: String) -> Bool {
@@ -909,4 +746,58 @@ public class WidgetLabelView: NSView {
             yMargin += letterHeight
         }
     }
+}
+
+public func isRoot() -> Bool {
+    return getuid() == 0
+}
+
+public func ensureRoot() {
+    if isRoot() {
+        return
+    }
+    
+    let pwd = Bundle.main.bundleURL.absoluteString.replacingOccurrences(of: "file://", with: "")
+    guard let script = NSAppleScript(source: "do shell script \"\(pwd)/Contents/MacOS/Stats > /dev/null 2>&1 &\" with administrator privileges") else {
+        return
+    }
+    
+    var err: NSDictionary? = nil
+    script.executeAndReturnError(&err)
+    
+    if err != nil {
+        print("cannot run script as root: \(String(describing: err))")
+        return
+    }
+    
+    NSApp.terminate(nil)
+    return
+}
+
+public func process(path: String, arguments: [String]) -> String? {
+    let task = Process()
+    task.launchPath = path
+    task.arguments = arguments
+    
+    let outputPipe = Pipe()
+    defer {
+        outputPipe.fileHandleForReading.closeFile()
+    }
+    task.standardOutput = outputPipe
+    
+    do {
+        try task.run()
+    } catch let error {
+        os_log(.error, log: .default, "system_profiler SPMemoryDataType: %s", "\(error.localizedDescription)")
+        return nil
+    }
+    
+    let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+    let output = String(decoding: outputData, as: UTF8.self)
+    
+    if output.isEmpty {
+        return nil
+    }
+    
+    return output
 }

@@ -38,8 +38,8 @@ public struct GPU_Info {
     public var temperature: Double? = nil
     public var utilization: Double? = nil
     
-    init(type: GPU_type, IOClass: String, vendor: String? = nil, model: String) {
-        self.id = UUID().uuidString
+    init(id: String, type: GPU_type, IOClass: String, vendor: String? = nil, model: String) {
+        self.id = id
         self.type = type
         self.IOClass = IOClass
         self.vendor = vendor
@@ -62,9 +62,6 @@ public struct GPUs: value_t {
 }
 
 public class GPU: Module {
-    private let smc: UnsafePointer<SMCService>?
-    private let store: UnsafePointer<Store>
-    
     private var infoReader: InfoReader? = nil
     private var settingsView: Settings
     private var popupView: Popup = Popup()
@@ -73,25 +70,21 @@ public class GPU: Module {
     
     private var showType: Bool {
         get {
-            return self.store.pointee.bool(key: "\(self.config.name)_showType", defaultValue: false)
+            return Store.shared.bool(key: "\(self.config.name)_showType", defaultValue: false)
         }
     }
     
-    public init(_ store: UnsafePointer<Store>, _ smc: UnsafePointer<SMCService>) {
-        self.store = store
-        self.smc = smc
-        self.settingsView = Settings("GPU", store: store)
+    public init() {
+        self.settingsView = Settings("GPU")
         
         super.init(
-            store: store,
             popup: self.popupView,
             settings: self.settingsView
         )
         guard self.available else { return }
         
         self.infoReader = InfoReader()
-        self.infoReader?.smc = smc
-        self.selectedGPU = store.pointee.string(key: "\(self.config.name)_gpu", defaultValue: self.selectedGPU)
+        self.selectedGPU = Store.shared.string(key: "\(self.config.name)_gpu", defaultValue: self.selectedGPU)
         
         self.infoReader?.callbackHandler = { [unowned self] value in
             self.infoCallback(value)

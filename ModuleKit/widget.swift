@@ -24,70 +24,64 @@ public enum widget_t: String {
     case battery = "battery"
     case sensors = "sensors"
     case memory = "memory"
+    case label = "label"
     
-    public func new(module: String, config: NSDictionary?, store: UnsafePointer<Store>?) -> Widget? {
-        var widget: Widget? = nil
-        let widgetConfig: NSDictionary? = config?[self.rawValue] as? NSDictionary
+    public func new(module: String, config: NSDictionary, defaultWidget: widget_t) -> Widget? {
+        var preview: widget_p? = nil
+        var item: widget_p? = nil
+        guard let widgetConfig: NSDictionary = config[self.rawValue] as? NSDictionary else {
+            return nil
+        }
         
         switch self {
         case .mini:
-            widget = Widget(self, module: module,
-                preview: Mini(title: module, config: widgetConfig, store: store, preview: true),
-                item: Mini(title: module, config: widgetConfig, store: store)
-            )
+            preview = Mini(title: module, config: widgetConfig, preview: true)
+            item = Mini(title: module, config: widgetConfig, preview: false)
             break
         case .lineChart:
-            widget = Widget(self, module: module,
-                preview: LineChart(title: module, config: widgetConfig, store: store, preview: true),
-                item: LineChart(title: module, config: widgetConfig, store: store)
-            )
+            preview = LineChart(title: module, config: widgetConfig, preview: true)
+            item = LineChart(title: module, config: widgetConfig, preview: false)
             break
         case .barChart:
-            widget = Widget(self, module: module,
-                preview: BarChart(title: module, config: widgetConfig, store: store, preview: true),
-                item: BarChart(title: module, config: widgetConfig, store: store)
-            )
+            preview = BarChart(title: module, config: widgetConfig, preview: true)
+            item = BarChart(title: module, config: widgetConfig, preview: false)
             break
         case .pieChart:
-            widget = Widget(self, module: module,
-                preview: PieChart(title: module, config: widgetConfig, store: store, preview: true),
-                item: PieChart(title: module, config: widgetConfig, store: store)
-            )
+            preview = PieChart(title: module, config: widgetConfig, preview: true)
+            item = PieChart(title: module, config: widgetConfig, preview: false)
             break
         case .networkChart:
-            widget = Widget(self, module: module,
-                preview: NetworkChart(title: module, config: widgetConfig, store: store, preview: true),
-                item: NetworkChart(title: module, config: widgetConfig, store: store)
-            )
+            preview = NetworkChart(title: module, config: widgetConfig, preview: true)
+            item = NetworkChart(title: module, config: widgetConfig, preview: false)
             break
         case .speed:
-            widget = Widget(self, module: module,
-                preview: SpeedWidget(title: module, config: widgetConfig, store: store, preview: true),
-                item: SpeedWidget(title: module, config: widgetConfig, store: store)
-            )
+            preview = SpeedWidget(title: module, config: widgetConfig, preview: true)
+            item = SpeedWidget(title: module, config: widgetConfig, preview: false)
             break
         case .battery:
-            widget = Widget(self, module: module,
-                preview: BatterykWidget(title: module, config: widgetConfig, store: store, preview: true),
-                item: BatterykWidget(title: module, config: widgetConfig, store: store)
-            )
+            preview = BatterykWidget(title: module, config: widgetConfig, preview: true)
+            item = BatterykWidget(title: module, config: widgetConfig, preview: false)
             break
         case .sensors:
-            widget = Widget(self, module: module,
-                preview: SensorsWidget(title: module, config: widgetConfig, store: store, preview: true),
-                item: SensorsWidget(title: module, config: widgetConfig, store: store)
-            )
+            preview = SensorsWidget(title: module, config: widgetConfig, preview: true)
+            item = SensorsWidget(title: module, config: widgetConfig, preview: false)
             break
         case .memory:
-            widget = Widget(self, module: module,
-                preview: MemoryWidget(title: module, config: widgetConfig, store: store, preview: true),
-                item: MemoryWidget(title: module, config: widgetConfig, store: store)
-            )
+            preview = MemoryWidget(title: module, config: widgetConfig, preview: true)
+            item = MemoryWidget(title: module, config: widgetConfig, preview: false)
+            break
+        case .label:
+            preview = Label(title: module, config: widgetConfig, preview: true)
+            item = Label(title: module, config: widgetConfig, preview: false)
             break
         default: break
         }
         
-        return widget
+        if let preview = preview, let item = item {
+            return Widget(self, defaultWidget: defaultWidget, module: module, preview: preview, item: item)
+        }
+        
+        return nil
     }
     
     public func name() -> String {
@@ -101,6 +95,7 @@ public enum widget_t: String {
             case .battery: return LocalizedString("Battery widget")
             case .sensors: return LocalizedString("Text widget")
             case .memory: return LocalizedString("Memory widget")
+            case .label: return LocalizedString("Label widget")
             default: return ""
         }
     }
@@ -154,52 +149,52 @@ open class WidgetWrapper: NSView, widget_p {
 
 public class Widget {
     public let type: widget_t
+    public let defaultWidget: widget_t
     public let module: String
     public let preview: widget_p
     public let item: widget_p
     
     public var isActive: Bool {
         get {
-            let arr = Store.shared.string(key: "\(self.module)_widget", defaultValue: "").split(separator: ",")
-            return arr.contains{ $0 == self.type.rawValue }
+            return self.list.contains{ $0 == self.type }
         }
         set {
-            var arr = Store.shared.string(key: "\(self.module)_widget", defaultValue: "").split(separator: ",").map{ String($0) }
-            
             if newValue {
-                arr.append(self.type.rawValue)
+                self.list.append(self.type)
             } else {
-                arr.removeAll{ $0 == self.type.rawValue }
+                self.list.removeAll{ $0 == self.type }
             }
-            
-            Store.shared.set(key: "\(self.module)_widget", value: arr.joined(separator: ","))
         }
     }
     
-    private var menuBarItem: NSStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    private var config: NSDictionary = NSDictionary()
+    private var menuBarItem: NSStatusItem? = nil
     private let log: OSLog
     
-    public init(_ type: widget_t, module: String, preview: widget_p, item: widget_p) {
+    private var list: [widget_t] {
+        get {
+            let string = Store.shared.string(key: "\(self.module)_widget", defaultValue: self.defaultWidget.rawValue)
+            return string.split(separator: ",").map{ (widget_t(rawValue: String($0)) ?? .unknown)}
+        }
+        set {
+            Store.shared.set(key: "\(self.module)_widget", value: newValue.map{ $0.rawValue }.joined(separator: ","))
+        }
+    }
+    
+    public init(_ type: widget_t, defaultWidget: widget_t, module: String, preview: widget_p, item: widget_p) {
         self.type = type
         self.module = module
         self.preview = preview
         self.item = item
+        self.defaultWidget = defaultWidget
         self.log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: self.module)
         
-        self.menuBarItem.length = self.isActive ? self.item.frame.width : 0
-        self.menuBarItem.isVisible = self.isActive
-        self.menuBarItem.autosaveName = "\(self.module)_\(self.type.name())"
-        
         self.item.widthHandler = { [weak self] value in
-            if let s = self, s.menuBarItem.length != value {
-                s.menuBarItem.length = value
+            if let s = self, let item = s.menuBarItem, item.length != value {
+                item.length = value
                 os_log(.debug, log: s.log, "widget %s change width to %.2f", "\(s.type)", value)
             }
         }
-        
-        self.menuBarItem.button?.target = self
-        self.menuBarItem.button?.action = #selector(self.togglePopup)
-        self.menuBarItem.button?.sendAction(on: [.leftMouseDown, .rightMouseDown])
     }
     
     // show item in the menu bar
@@ -208,18 +203,29 @@ public class Widget {
             return
         }
         
-        self.menuBarItem.length = self.item.frame.width
-        self.menuBarItem.isVisible = true
-        self.menuBarItem.button?.addSubview(self.item)
+        DispatchQueue.main.async(execute: {
+            self.menuBarItem = NSStatusBar.system.statusItem(withLength: self.item.frame.width)
+            self.menuBarItem?.autosaveName = "\(self.module)_\(self.type.name())"
+            self.menuBarItem?.button?.addSubview(self.item)
+            
+            if let item = self.menuBarItem, !item.isVisible {
+                self.menuBarItem?.isVisible = true
+            }
+            
+            self.menuBarItem?.button?.target = self
+            self.menuBarItem?.button?.action = #selector(self.togglePopup)
+            self.menuBarItem?.button?.sendAction(on: [.leftMouseDown, .rightMouseDown])
+        })
         
         os_log(.debug, log: log, "widget %s enabled", self.type.rawValue)
     }
     
     // remove item from the menu bar
     public func disable() {
-        self.menuBarItem.length = 0
-        self.menuBarItem.isVisible = false
-        
+        if let item = self.menuBarItem {
+            NSStatusBar.system.removeStatusItem(item)
+        }
+        self.menuBarItem = nil
         os_log(.debug, log: log, "widget %s disabled", self.type.rawValue)
     }
     
@@ -237,7 +243,7 @@ public class Widget {
     }
     
     @objc private func togglePopup(_ sender: Any) {
-        if let window = self.menuBarItem.button?.window {
+        if let item = self.menuBarItem, let window = item.button?.window {
             NotificationCenter.default.post(name: .togglePopup, object: nil, userInfo: [
                 "module": self.module,
                 "origin": window.frame.origin,

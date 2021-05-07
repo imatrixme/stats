@@ -24,6 +24,7 @@
 "Yes" = "Ja";
 "No" = "Nei";
 "Automatic" = "Automatisk";
+"Manual" = "Manual";
 "None" = "Ingen";
 "Dots" = "Prikker";
 "Arrows" = "Piler";
@@ -31,6 +32,8 @@
 "Short" = "Kort";
 "Long" = "Lang";
 "Statistics" = "Statistikk";
+"Max" = "Max";
+"Min" = "Min";
 
 // Alerts
 "New version available" = "Ny versjon tilgjengelig";
@@ -49,11 +52,11 @@
 // Application settings
 "Update application" = "Oppdater programmet";
 "Check for updates" = "Se etter oppdateringer";
-"At start" = "At start";
-"Once per day" = "Once per day";
-"Once per week" = "Once per week";
-"Once per month" = "Once per month";
-"Never" = "Never";
+"At start" = "Ved oppstart";
+"Once per day" = "Daglig";
+"Once per week" = "Ukentlig";
+"Once per month" = "Månedlig";
+"Never" = "Aldri";
 "Check for update" = "Se etter oppdatering";
 "Show icon in dock" = "Vis ikon i dock";
 "Start at login" = "Start ved innlogging";
@@ -63,7 +66,7 @@
 "Uptime" = "Oppetid";
 
 // Update
-"The latest version of Stats installed" = "Den nyeste versjonen av Stats er installert";
+"The latest version of Stats installed" = "Du har den nyeste versjonen av Stats";
 "Downloading..." = "Laster ned...";
 "Current version: " = "Nåværende versjon: ";
 "Latest version: " = "Nyeste version: ";
@@ -83,18 +86,19 @@
 "One row" = "En rad";
 "Two rows" = "To rader";
 "Mini widget" = "Mini";
-"Line chart widget" = "Line chart";
-"Bar chart widget" = "Bar chart";
-"Pie chart widget" = "Pie chart";
-"Network chart widget" = "Network chart";
-"Speed widget" = "Speed";
-"Battery widget" = "Battery";
-"Text widget" = "Text";
-"Memory widget" = "Memory";
+"Line chart widget" = "Linjediagram";
+"Bar chart widget" = "Søylediagram";
+"Pie chart widget" = "Kakediagram";
+"Network chart widget" = "Linjediagram";
+"Speed widget" = "Tall";
+"Battery widget" = "Batteri";
+"Text widget" = "Tekst";
+"Memory widget" = "Tall";
 
 // Module Kit
 "Open module settings" = "Åpne modulinnstillinger";
 "Select widget" = "Velg %0-visning";
+"Open widget settings" = "Open widget settings";
 "Update interval" = "Oppdateringsintervall";
 "Usage history" = "Brukshistorikk";
 "Details" = "Detaljer";
@@ -145,7 +149,7 @@
 // Disk
 "Show removable disks" = "Vis utløsbare disker";
 "Used disk memory" = "Brukte %0 fra %1";
-"Free disk memory" = "Gratis %0 fra %1";
+"Free disk memory" = "Ledig %0 fra %1";
 "Disk to show" = "Disker å vise";
 "Open disk" = "Åpne disken";
 "Switch view" = "Bytt visning";
@@ -163,6 +167,7 @@
 "Interface" = "Grensesnitt";
 "Network" = "Nettverk";
 "Physical address" = "Fysisk addresse";
+"Refresh" = "Refresh";
 "Click to copy public IP address" = "Klikk for å kopiere offentlig IP-adresse";
 "Click to copy local IP address" = "Klikk for å kopiere lokal IP-adresse";
 "Click to copy wifi name" = "Klikk for å kopiere nettverksnavn";
@@ -178,14 +183,14 @@
 // Battery
 "Level" = "Nivå";
 "Source" = "Kilde";
-"AC Power" = "AC Power";
-"Battery Power" = "Battery Power";
+"AC Power" = "Strømforsyning";
+"Battery Power" = "Batteri";
 "Time" = "Tid";
 "Health" = "Helse";
 "Battery" = "Batteri";
 "Amperage" = "Strømstyrke";
 "Voltage" = "Spenning";
-"Cycles" = "Syklusnummer";
+"Cycles" = "Sykluser";
 "Temperature" = "Temperatur";
 "Power adapter" = "Strømadapter";
 "Power" = "Strøm";
@@ -196,8 +201,11 @@
 "Fully charged" = "Fullstendig ladet";
 "Not connected" = "Ikke koblet til";
 "Low level notification" = "Varsling ved lavt nivå";
+"High level notification" = "High level notification";
 "Low battery" = "Lavt batterinivå";
+"High battery" = "High battery";
 "Battery remaining" = "%0% igjen";
+"Battery remaining to full charge" = "%0% to full charge";
 "Percentage" = "Prosent";
 "Percentage and time" = "Prosent og tid";
 "Time and percentage" = "Tid og prosent";
@@ -206,3 +214,35 @@
 
 // Fans
 "Fans" = "Vifter";
+
+// Colors
+"Based on utilization" = "Based on utilization";
+"Based on pressure" = "Based on pressure";
+"System accent" = "System accent";
+"Monochrome accent" = "Monochrome accent";
+"Clear" = "Clear";
+"White" = "White";
+"Black" = "Black";
+"Gray" = "Gray";
+"Second gray" = "Second gray";
+"Dark gray" = "Dark gray";
+"Light gray" = "Light gray";
+"Red" = "Red";
+"Second red" = "Second red";
+"Green" = "Green";
+"Second green" = "Second green";
+"Blue" = "Blue";
+"Second blue" = "Second blue";
+"Yellow" = "Yellow";
+"Second yellow" = "Second yellow";
+"Orange" = "Orange";
+"Second orange" = "Second orange";
+"Purple" = "Purple";
+"Second purple" = "Second purple";
+"Brown" = "Brown";
+"Second brown" = "Second brown";
+"Cyan" = "Cyan";
+"Magenta" = "Magenta";
+"Pink" = "Pink";
+"Teal" = "Teal";
+"Indigo" = "Indigo";
